@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Interests</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            text-align: center;
+        }
+
+        h2 {
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .card p {
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .selected {
+            border: 4px solid #0095f6;
+        }
+
+        button {
+            margin: 30px;
+            padding: 10px 25px;
+            background: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Select Your Interests</h2>
+
+<div class="container" id="interests"></div>
+
+<button onclick="saveInterests()">Continue</button>
+
+<script>
+const interestList = [
+    {
+        name: "coding",
+        img: "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg"
+    },
+    {
+        name: "music",
+        img: "https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg"
+    },
+    {
+        name: "sports",
+        img: "https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg"
+    },
+    {
+        name: "travel",
+        img: "https://images.pexels.com/photos/346885/pexels-photo-346885.jpeg"
+    },
+    {
+        name: "food",
+        img: "https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
+    },
+    {
+        name: "movies",
+        img: "https://images.pexels.com/photos/799137/pexels-photo-799137.jpeg"
+    }
+];
+
+const container = document.getElementById("interests");
+
+interestList.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+        <img src="${item.img}">
+        <p>${item.name}</p>
+    `;
+    div.onclick = () => div.classList.toggle("selected");
+    container.appendChild(div);
+});
+
+function saveInterests() {
+    const selected = [];
+    document.querySelectorAll(".selected p").forEach(p => {
+        selected.push(p.innerText);
+    });
+
+    const username = localStorage.getItem("username");
+
+    fetch("/register", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            username: username,
+            interests: selected.join(",")
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        window.location.href = "feed.html";
+    });
+}
+</script>
+
+</body>
+</html>

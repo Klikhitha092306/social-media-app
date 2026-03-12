@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    width: 400px;
+    margin: 50px auto;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+div {
+    margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+    <h2>Register User</h2>
+
+    <input type="text" id="username" placeholder="Enter Username"><br><br>
+    <input type="text" id="interests" placeholder="Enter Interests (comma separated)"><br><br>
+
+    <button onclick="register()">Register</button>
+
+    <p id="message"></p>
+
+    <br>
+    <a href="post.html">Go to Create Post</a>
+    <br>
+    <a href="feed.html">Go to Feed</a>
+
+<script>
+function register() {
+    const username = document.getElementById("username").value;
+    const interests = document.getElementById("interests").value;
+
+    fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, interests })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("message").innerText = data.message;
+    });
+}
+</script>
+
+</body>
+</html>
